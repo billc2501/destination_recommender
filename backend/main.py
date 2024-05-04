@@ -112,3 +112,7 @@ async def create_destination(destination: DestinationBase, db: db_dependency):
 async def get_destinations(db: db_dependency):
     destinations = db.query(models.Destination).order_by(models.Destination.id.desc()).limit(5).all()
     return destinations
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app)
