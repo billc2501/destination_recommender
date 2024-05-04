@@ -43,7 +43,7 @@ class DestinationModel(DestinationBase):
     x_coordinate: float
     y_coordinate: float
     class Config:
-        orm_mode=True
+        from_attributes=True
 
 def get_db():
     db = SessionLocal()
