@@ -5,7 +5,6 @@ from pydantic import BaseModel
 from database import SessionLocal, engine 
 import models
 from fastapi.middleware.cors import CORSMiddleware
-from openai import OpenAI
 import anthropic
 import os
 
@@ -21,7 +20,7 @@ client = anthropic.Anthropic(
 )
 
 origins = [
-    'http://localhost:3000'
+    os.environ.get("CORS_ORIGIN")
 ]
 
 app.add_middleware(
@@ -101,11 +100,9 @@ async def create_destination(destination: DestinationBase, db: db_dependency):
     messageText = message.content[0].text
     db_destination = models.Destination(**destination.model_dump())
     latitude, longitude = get_coordinates(messageText)
-    lines = messageText.splitlines()
-    location_details = '\n'.join(lines[:4])
     db_destination.y_coordinate = latitude
     db_destination.x_coordinate = longitude
-    db_destination.location_details = location_details
+    db_destination.location_details = messageText
     db.add(db_destination)
     db.commit()
     db.refresh(db_destination)
