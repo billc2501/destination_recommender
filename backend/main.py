@@ -74,7 +74,6 @@ def get_coordinates(content):
         if 'W' in following_string:
             longitude *= -1
     return latitude, longitude
-    
 
 
 @app.post("/destinations/", response_model=DestinationModel)
