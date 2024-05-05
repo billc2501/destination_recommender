@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import api from '../api'
 import {Card} from 'react-bootstrap';
+import ErrorMessage from '../components/ErrorMessage';
 
 
 const Home = () => {
   const [destinations, setDestinations] = useState([]);
   const [locations, setLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [formError, setFormError] = useState(false);
   const [formData, setFormData] = useState({
     temperature: '',
     climate: '',
@@ -21,7 +23,12 @@ const Home = () => {
   useEffect(() => {
     const fetchLocation = async () => {
       if (destinations.length){
-        const locations = await api.post('/locations/', {x_coordinate: destinations[0].x_coordinate, y_coordinate: destinations[0].y_coordinate});
+        const locations = await api.get('/locations/', {
+          params: {
+            x_coordinate: destinations[0].x_coordinate,
+            y_coordinate: destinations[0].y_coordinate
+          }
+        });
         console.log(locations.data);
         setLocations(locations.data);
       }
@@ -40,21 +47,28 @@ const Home = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
-    await api.post('/destinations/', formData);
-    fetchDestinations();
-    setFormData({
-      temperature: '',
-      climate: '',
-      activities: '',
-      relative_location: '',
-    });
-    setIsLoading(false);
+    if (!formData.temperature && !formData.climate && !formData.activities && !formData.relative_location){
+      setFormError(true);
+    }
+    else {
+      setFormError(false);
+      setIsLoading(true);
+      await api.post('/destinations/', formData);
+      fetchDestinations();
+      setFormData({
+        temperature: '',
+        climate: '',
+        activities: '',
+        relative_location: '',
+      });
+      setIsLoading(false);
+    }
   }
 
   return (
     <div class>
       <div className='container'>
+          {formError && <ErrorMessage/>}
           <form className="border border-primary rounded p-4 m-3" onSubmit={handleFormSubmit}>
             <div className='mb-3 mt-3s'>
               <label htmlFor='temperature' className='form-label'>

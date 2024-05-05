@@ -14,14 +14,14 @@ const Results = () => {
     }, []);
     return (
     <>
-        <h5 class="text-center">Live Recent Results</h5>
+        <h5 class="text-center pt-4">Recent Results</h5>
         <table className='table table-striped table-bordered table-hover mt-1 mx-5 mb-5'>
 
             <thead>
                 <th>Temp</th>
                 <th>Climate</th>
                 <th>Activities</th>
-                <th>Relative Location</th>
+                <th>Geographical Proximity</th>
                 <th>Details</th>
             </thead>
             <tbody>

@@ -32,10 +32,6 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-class CoordinatesBase(BaseModel):
-    x_coordinate: float
-    y_coordinate: float
-
 class DestinationBase(BaseModel):
     temperature: str
     climate: str
@@ -80,11 +76,11 @@ def get_coordinates(content):
             longitude *= -1
     return latitude, longitude
 
-@app.post("/locations/")
-async def get_nearby_locations(coordinates: CoordinatesBase):
+@app.get("/locations/")
+async def get_nearby_locations(x_coordinate: float, y_coordinate: float):
     url = "https://trueway-places.p.rapidapi.com/FindPlacesNearby"
 
-    querystring = {"location": "{},{}".format(coordinates.y_coordinate, coordinates.x_coordinate), "radius":"1000","type": "tourist_attraction", "language":"en"}
+    querystring = {"location": "{},{}".format(y_coordinate, x_coordinate), "radius":"1000","type": "tourist_attraction", "language":"en"}
 
     headers = {
         "X-RapidAPI-Key": os.environ.get("PLACES_API"),
