@@ -4,6 +4,8 @@
 This [application](https://destination-recommender-gamma.vercel.app/) recommends you locations to go along with specific places within the region wih information from a survey.
 You can also see past results from yourself/other individuals by going to '/results'.
 
+Check out the [demo](https://www.loom.com/share/dde76eeb9c254662bae812ad3f9a91d9?sid=9a8d917d-1b34-44a8-8fa2-a530481dbebd).
+
 ## Technologies
 1. React (JavaScript)
 2. FastAPI (Python)
