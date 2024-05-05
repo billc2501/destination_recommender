@@ -8,7 +8,7 @@ function DetailsModal(props) {
   return (
     <>
       <Button variant="primary" onClick={() => setShow(true)}>
-        {props.location_details.substring(0, 100) + '...'}
+        {props.location_details.substring(0, 125) + ' ...'}
       </Button>
 
       <Modal

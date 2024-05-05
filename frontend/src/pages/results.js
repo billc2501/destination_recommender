@@ -14,12 +14,12 @@ const Results = () => {
     }, []);
     return (
     <>
-        <h5 class="text-center">Prior Results</h5>
+        <h5 class="text-center">Live Recent Results</h5>
         <table className='table table-striped table-bordered table-hover mt-1 mx-5 mb-5'>
 
             <thead>
                 <th>Temp</th>
-                <th>Weather</th>
+                <th>Climate</th>
                 <th>Activities</th>
                 <th>Relative Location</th>
                 <th>Details</th>
@@ -28,7 +28,7 @@ const Results = () => {
                 {destinations.map((destination) => (
                     <tr key={destination.id}>
                     <td>{destination.temperature}</td>
-                    <td>{destination.weather}</td>
+                    <td>{destination.climate}</td>
                     <td>{destination.activities}</td>
                     <td>{destination.relative_location}</td>
                     <DetailsModal location_details={destination.location_details}></DetailsModal>

@@ -6,6 +6,7 @@ from database import SessionLocal, engine
 import models
 from fastapi.middleware.cors import CORSMiddleware
 import anthropic
+import requests
 import os
 
 from dotenv import load_dotenv
@@ -31,9 +32,13 @@ app.add_middleware(
     allow_headers=['*']
 )
 
+class CoordinatesBase(BaseModel):
+    x_coordinate: float
+    y_coordinate: float
+
 class DestinationBase(BaseModel):
     temperature: str
-    weather: str
+    climate: str
     activities: str
     relative_location: str
 
@@ -75,6 +80,19 @@ def get_coordinates(content):
             longitude *= -1
     return latitude, longitude
 
+@app.post("/locations/")
+async def get_nearby_locations(coordinates: CoordinatesBase):
+    url = "https://trueway-places.p.rapidapi.com/FindPlacesNearby"
+
+    querystring = {"location": "{},{}".format(coordinates.y_coordinate, coordinates.x_coordinate), "radius":"1000","type": "tourist_attraction", "language":"en"}
+
+    headers = {
+        "X-RapidAPI-Key": os.environ.get("PLACES_API"),
+        "X-RapidAPI-Host": "trueway-places.p.rapidapi.com"
+    }
+    response = requests.get(url, headers=headers, params=querystring)
+    items = response.json()['results'][:10]
+    return items
 
 @app.post("/destinations/", response_model=DestinationModel)
 async def create_destination(destination: DestinationBase, db: db_dependency):
@@ -84,18 +102,20 @@ async def create_destination(destination: DestinationBase, db: db_dependency):
         temperature=0.0,
         system=
         '''
-            Act as a tourist guide and recommend a place to go along with the coordinates in decimal degree notation.
+            1. Act as a tourist guide
+            2. Recommend a place to go.
+            3. Provide the coordinates in decimal degree notation and format the coordinates in
+            'Longitude: ' and 'Latitude: '
         ''',
         messages=[
             {"role": "user", "content": 
              '''
-             I want go to a place that has a {} temperature and a climate of {} and I want to do a lot of
-             {} there. This place should be in the {}
+             I want go to a place that has a {} temperature and a climate of {} and some activities I want to do there
+             are {}. This place should also be in or close to {}
              '''.format(
-                destination.temperature, destination.weather, destination.activities, destination.relative_location)}
+                destination.temperature, destination.climate, destination.activities, destination.relative_location)}
         ]
     )
-    print(message.content[0].text)
     messageText = message.content[0].text
     db_destination = models.Destination(**destination.model_dump())
     latitude, longitude = get_coordinates(messageText)

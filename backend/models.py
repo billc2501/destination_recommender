@@ -5,7 +5,7 @@ class Destination(Base):
     __tablename__ = 'destination'
     id = Column(Integer, primary_key=True, index=True)
     temperature = Column(String)
-    weather = Column(String)
+    climate = Column(String)
     activities = Column(String)
     relative_location = Column(String)
     location_details = Column(String)
