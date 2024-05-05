@@ -40,5 +40,16 @@ Then, create an env file with the following variables:
   CORS_ORIGIN="" - for cors list, add the frontend url
   PLACES_API="" - for [rapidAPI](https://rapidapi.com/trueway/api/trueway-places/) api, add api key 
 
-Then to start the application, please run **python main.py**
+Then to start the application, please run **python main.py**.
+
+## Next Steps
+
+Additional features include:
+1. Addi a calculated cost of travel.
+2. Create a login system for users to have tailored information for them.
+3. Calculate distance from certain location.
+
+Improvements in Appeared Performance:
+1. Utilize a vector database to use specialized information to better give a location
+2. Stream responses for better responsiveness
 
